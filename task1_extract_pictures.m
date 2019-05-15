@@ -35,7 +35,6 @@ function extract_worm(image_num,threshold)
     figure('units', 'pixels', 'innerposition', [0 0 800 1400]);
     sample_interval = 10;
     i = 1;
-%     j = 1;
     for k=1:idx
         worm = localize_worm(k);
         worm_full = full_worm(k);
@@ -58,12 +57,6 @@ function extract_worm(image_num,threshold)
         [line_points_full,~] = form_line(mid_points_full,25);
         clear mid_points_full;
         [num_unused,~] = size(points_unused);
-%         show_line(line_points);
-%         hold on;
-%         plot(points_unused(:,2),points_unused(:,1),'*r');
-%         hold off;
-%         saveas(gcf,['output/threhold_',num2str(threshold),'/worms/image_',num2str(image_num),'/line_',num2str(k),'.png']);
-%         save (['output/threhold_',num2str(threshold),'/worms/image_',num2str(image_num),'/data_',num2str(k),'.mat']);
         if num_unused == 0
             imshow(worm,'InitialMagnification','fit');title(i);
             hold on;
@@ -93,21 +86,6 @@ function extract_worm(image_num,threshold)
             clear a b c d m n l size_a size_b worm_blank;
             i = i+1;
         end
-%         else
-% %             save (['output/threhold_',num2str(threshold),'/bad_worms/image_',num2str(image_num),'/data_',num2str(j),'.mat']);
-%             imshow(worm,'InitialMagnification','fit');title(j);
-% %             saveas(gcf,['output/threhold_',num2str(threshold),'/bad_worms/image_',num2str(image_num),'/image_',num2str(j),'.png']);
-%             hold on;
-%             plot(edge_sample(:,2),edge_sample(:,1),'xm');
-%             plot(mid_points(:,2),mid_points(:,1),'.k'); % link the original mid_points
-%             plot(mid_points(:,2),mid_points(:,1),'ob');
-%             show_line(line_points);
-%             hold on;
-%             plot(points_unused(:,2),points_unused(:,1),'*r');
-%             hold off;
-% %             saveas(gcf,['output/threhold_',num2str(threshold),'/bad_worms/image_',num2str(image_num),'/line_',num2str(j),'.png']);
-%             j = j+1;
-%         end
     end
     total_worms = i-1;
     save (['output/threshold_',num2str(threshold),'/good_worms/image_',num2str(image_num),'/data_image.mat']);
