@@ -17,7 +17,7 @@ function extract_worm(image_num,threshold)
     I = rgb2gray(A);
     I = LinearEnhance(I,20,80,50,230);
 
-    % eliminate bright areas in background(see results in docx):
+    % eliminate bright areas in background
     se = strel('disk',20);  % build disk-shape circle whose r is 20
     background = imopen(I,se); % open images(erosion with element inside the bright areas, if element contains then preserve)
     clear se;
@@ -94,9 +94,9 @@ function extract_worm(image_num,threshold)
             i = i+1;
         end
 %         else
-%             save (['output/threhold_',num2str(threshold),'/bad_worms/image_',num2str(image_num),'/data_',num2str(j),'.mat']);
+% %             save (['output/threhold_',num2str(threshold),'/bad_worms/image_',num2str(image_num),'/data_',num2str(j),'.mat']);
 %             imshow(worm,'InitialMagnification','fit');title(j);
-%             saveas(gcf,['output/threhold_',num2str(threshold),'/bad_worms/image_',num2str(image_num),'/image_',num2str(j),'.png']);
+% %             saveas(gcf,['output/threhold_',num2str(threshold),'/bad_worms/image_',num2str(image_num),'/image_',num2str(j),'.png']);
 %             hold on;
 %             plot(edge_sample(:,2),edge_sample(:,1),'xm');
 %             plot(mid_points(:,2),mid_points(:,1),'.k'); % link the original mid_points
@@ -105,7 +105,7 @@ function extract_worm(image_num,threshold)
 %             hold on;
 %             plot(points_unused(:,2),points_unused(:,1),'*r');
 %             hold off;
-%             saveas(gcf,['output/threhold_',num2str(threshold),'/bad_worms/image_',num2str(image_num),'/line_',num2str(j),'.png']);
+% %             saveas(gcf,['output/threhold_',num2str(threshold),'/bad_worms/image_',num2str(image_num),'/line_',num2str(j),'.png']);
 %             j = j+1;
 %         end
     end
@@ -172,9 +172,11 @@ points = [0 0];
 group_num = 3;
 for i=1:num
     goal_dis = 10000;
-%     imshow(worm);hold on; %%%%%%%%%%
+%     imshow(worm,'InitialMagnification','fit');hold on; %%%%%%%%%%
 %     plot(edge_sample(:,2),edge_sample(:,1),'xm'); %%%%%%%%%%
 %     plot(edge_sample(i,2),edge_sample(i,1),'*r'); %%%%%%%%%%
+%     plot(edge_sample(i,2),edge_sample(i,1),'sr'); %%%%%%%%%%
+%     plot(edge_sample(i,2),edge_sample(i,1),'or'); %%%%%%%%%%
     if i==1
         edge_sample3 = edge_sample(2:num,:);
     elseif i==num
@@ -183,7 +185,7 @@ for i=1:num
         edge_sample3 = [edge_sample(i+1:num,:);edge_sample(1:i-1,:)]; % range of goal_points(num-1)
     end
     for j=1:num-group_num % each group has 3 points
-        plot(edge_sample3(j:j+group_num-1,2),edge_sample3(j:j+group_num-1,1),'*r');  %%%%%%%%%%
+%         plot(edge_sample3(j:j+group_num-1,2),edge_sample3(j:j+group_num-1,1),'*r');  %%%%%%%%%%
         [judge,n,dis] = judge_group(worm,edge_sample3(j:j+group_num-1,:),edge_sample(i,:));
         if judge == 1
             if goal_dis >= dis
@@ -277,14 +279,14 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function worm = localize_worm(num)
 % get localized worm img
-global cc wormdata;
+global cc;
 Bounding = get_boundingbox(num);
-worm = false(wormdata(num).BoundingBox(4),wormdata(num).BoundingBox(3));
+worm = false(Bounding(2,1)-Bounding(1,1)+1,Bounding(2,2)-Bounding(1,2)+1);
 cor = get_coordinate(cc.PixelIdxList{num})-Bounding(1,:)+[1,1]; % get cor correlating to worm
-vector = (cor(:,1)-1)*wormdata(num).BoundingBox(4)+cor(:,2); % get vector correlating to worm
+vector = (cor(:,2)-1)*(Bounding(2,1)-Bounding(1,1)+1)+cor(:,1); % get vector correlating to worm
 worm(vector) = true;
 % plus a "frame" of width 5 to worm:
-worm = [false(5,wormdata(num).BoundingBox(3)+10);false(wormdata(num).BoundingBox(4),5),worm,false(wormdata(num).BoundingBox(4),5);false(5,wormdata(num).BoundingBox(3)+10)];
+worm = [false((Bounding(2,1)-Bounding(1,1)+1)+10,5),[false(5,(Bounding(2,2)-Bounding(1,2)+1));worm;false(5,(Bounding(2,2)-Bounding(1,2)+1))],false((Bounding(2,1)-Bounding(1,1)+1)+10,5)];
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function worm_full = full_worm(num)
@@ -310,7 +312,7 @@ function cor_area = get_coordinate(vector)
 % get cor from vector
 global I;
 [r,~] = size(I);
-x = mod(vector,r)+(mod(vector,1440)==0)*r;
+x = mod(vector,r)+(mod(vector,r)==0)*r;
 y = (vector-x)/r+1;
 cor_area = [x,y];
 end
@@ -318,14 +320,13 @@ end
 function cor_boundary = get_boundary(worm)
 B = bwboundaries(worm); % get a (p*1)cell array of boundary points
 [numbcell,~] = size(B);
-cor_boundary = [0 0];
+cor_boundary = [];
 for i=1:numbcell
     [numbarray,~] = size(B{i});
     if numbarray>20 % if the number of boundary points are larger than 20, which means it's a big inner area
         cor_boundary = [cor_boundary;B{i}]; % link different boundaries together
     end
 end
-cor_boundary = cor_boundary(2:end,:);
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function edge_sample = edge_sample_select(cor_boundary,num)
