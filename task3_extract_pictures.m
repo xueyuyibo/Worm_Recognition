@@ -46,9 +46,6 @@ function extract_worm(image_num,color_num,threshold)
         cor_boundary = get_boundary(worm);
         cor_boundary_full = get_boundary(worm_full);
         [boundary_num,~] = size(cor_boundary);
-%         imshow(worm,'InitialMagnification','fit');title(k);
-%         saveas(gcf,['output/threhold_',num2str(threshold),'/worms/image_',num2str(image_num),'/image_',num2str(k),'.png']);
-%         hold on;
         edge_sample = edge_sample_select(cor_boundary,sample_interval);
         edge_sample_full = edge_sample_select(cor_boundary_full,sample_interval);
 %         plot(edge_sample(:,2),edge_sample(:,1),'xm');
@@ -63,12 +60,6 @@ function extract_worm(image_num,color_num,threshold)
         [line_points_full,~] = form_line(mid_points_full,25);
         clear mid_points_full;
         [num_unused,~] = size(points_unused);
-%         show_line(line_points);
-%         hold on;
-%         plot(points_unused(:,2),points_unused(:,1),'*r');
-%         hold off;
-%         saveas(gcf,['output/threhold_',num2str(threshold),'/worms/image_',num2str(image_num),'/line_',num2str(k),'.png']);
-%         save (['output/threhold_',num2str(threshold),'/worms/image_',num2str(image_num),'/data_',num2str(k),'.mat']);
         if num_unused == 0 && wormdata(k).Area/boundary_num>=4
             clear boundary_num;
             imshow(worm,'InitialMagnification','fit');title(i);
