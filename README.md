@@ -1,4 +1,4 @@
-# Worm_Recognization
+# Worm_Recognition
 Identify worms in different images
 
 There are four tasks in this project.
