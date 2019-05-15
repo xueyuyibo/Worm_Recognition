@@ -108,10 +108,6 @@ function [res,judge,name] = judge_interrupt(image_num,color_num,threshold,worm_p
         if dist >= 50
             res = worm_pic;
             name = [0,0,0,0,0];
-%             [size_area,~] = size(worm_pic{4}{i});
-%             for area=1:size_area
-%                 I_ref(worm_pic{4}{i}(area,1),worm_pic{4}{i}(area,2)) = I_ref(worm_pic{4}{i}(area,1),worm_pic{4}{i}(area,2)) + 2;
-%             end
             whole_line_area = connect_line(worm_pic{5}{i},width);
             [size_mid,~] = size(whole_line_area);
             idex = [];
@@ -170,10 +166,6 @@ function [res,judge,name] = judge_interrupt(image_num,color_num,threshold,worm_p
         if dist < 50 % to be rectified
             if worm_pic{3}(n,2)-feature(4)>=350 || worm_pic{3}(n,3)-feature(5)>=20 % to be rectified
                 judge = 0;
-%                 [size_area,~] = size(worm_pic{4}{n});
-%                 for area=1:size_area
-%                     I_ref(worm_pic{4}{n}(area,1),worm_pic{4}{n}(area,2)) = I_ref(worm_pic{4}{n}(area,1),worm_pic{4}{n}(area,2)) + 2;
-%                 end
                 whole_line_area = connect_line(worm_pic{5}{n},width);
                 [size_mid,~] = size(whole_line_area);
                 idex = [];
@@ -199,54 +191,10 @@ function [res,judge,name] = judge_interrupt(image_num,color_num,threshold,worm_p
                         I_ref(whole_line_area(mid,1),whole_line_area(mid,2)) = I_ref(whole_line_area(mid,1),whole_line_area(mid,2)) + 4;
                     end
                 end
-%                 dist_sum = 10000;
-%                 neighbor = 0;
-%                 for h=1:total_worms
-%                     load (['output/color_',num2str(color_num),'/image_',num2str(image_num),'/threshold_',num2str(threshold),'/data_',num2str(h),'.mat'],'edge_sample_full');
-%                     location2 = mean(edge_sample_full);
-%                     if location1 ~= location2
-%                         if (norm(location1-location2)+norm(location1-worm_pic{2}(n,:))+norm(location2-worm_pic{2}(n,:))) < dist_sum
-%                             dist_sum = norm(location1-location2)+norm(location1-worm_pic{2}(n,:))+norm(location2-worm_pic{2}(n,:));
-%                             neighbor = h;
-%                         end
-%                     end
-%                 end
-%                 load (['output/color_',num2str(color_num),'/image_',num2str(image_num),'/threshold_',num2str(threshold),'/data_',num2str(i),'.mat'],'cor_boundary_full');
-%                 boundary1 = cor_boundary_full;
-%                 load (['output/color_',num2str(color_num),'/image_',num2str(image_num),'/threshold_',num2str(threshold),'/data_',num2str(neighbor),'.mat'],'cor_boundary_full');
-%                 boundary2 = cor_boundary_full;
-%                 dist_ref = 100000;
-%                 [size1,~] = size(boundary1);
-%                 [size2,~] = size(boundary2);
-%                 for a=1:size1
-%                     for b=1:size2
-%                         if norm(boundary1(a,:)-boundary2(b,:)) < dist_ref
-%                             dist_ref = norm(boundary1(a,:)-boundary2(b,:));
-%                             points = [boundary1(a,:);boundary2(b,:)];
-%                         end
-%                     end
-%                 end
-%                 cor_line = linked_line(points(1,:),points(2,:));
-%                 [size_line,~] = size(cor_line);
-%                 [size_a,size_b] = size(I_ref);
-%                 for a=max(0,min(cor_line(:,1))-5):min(size_a,max(cor_line(:,1))+5)
-%                     for b=max(0,min(cor_line(:,2))-5):min(size_b,max(cor_line(:,2))+5)
-%                         for c=1:size_line
-%                             if norm([a,b]-cor_line(c,:)) < 3
-%                                 cor_line = [cor_line;[a,b]];
-%                             end
-%                         end
-%                     end
-%                 end
-%                 [size_line,~] = size(cor_line);
-%                 for c=1:size_line
-%                     I_ref(cor_line(c,1),cor_line(c,2)) = 20;
-%                 end
                 if i == 1
                     res = worm_pic;
                 end
                 name = [0,0,0,0,0];
-%                 break;
             else
                 if i == 1
                     res = worm_pic;
@@ -314,9 +262,6 @@ function extract_worm(image_num,color_num,threshold)
         cor_boundary = get_boundary(worm);
         cor_boundary_full = get_boundary(worm_full);
         [boundary_num,~] = size(cor_boundary);
-%         imshow(worm,'InitialMagnification','fit');title(k);
-%         saveas(gcf,['output/threhold_',num2str(threshold),'/worms/image_',num2str(image_num),'/image_',num2str(k),'.png']);
-%         hold on;
         edge_sample = edge_sample_select(cor_boundary,sample_interval);
         edge_sample_full = edge_sample_select(cor_boundary_full,sample_interval);
 %         plot(edge_sample(:,2),edge_sample(:,1),'xm');
@@ -335,12 +280,6 @@ function extract_worm(image_num,color_num,threshold)
             [num_used,~] = size(line_points);
             brightness = mean(I_grey(cc.PixelIdxList{k}));
             clear mid_points_full mid_points_num;
-    %         show_line(line_points);
-    %         hold on;
-    %         plot(points_unused(:,2),points_unused(:,1),'*r');
-    %         hold off;
-    %         saveas(gcf,['output/threhold_',num2str(threshold),'/worms/image_',num2str(image_num),'/line_',num2str(k),'.png']);
-    %         save (['output/threhold_',num2str(threshold),'/worms/image_',num2str(image_num),'/data_',num2str(k),'.mat']);
             if num_unused/num_used < 0.8 && wormdata(k).Area/boundary_num>=2 && brightness>=15
                 clear boundary_num;
                 imshow(worm,'InitialMagnification','fit');title(i);
