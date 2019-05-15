@@ -43,24 +43,23 @@ end
 % train = [a=0:0.05:1 b=0:0.05:1 c=0:0.05:1 omega=0:0.1:10]
 dist = -Inf;
 fig = [];
-% for a=0.001:0.2:1
-%     for b=0.001:0.2:1
-%         for c=0.001:0.2:1
-%             for omega=0:10:50
-%                 fprintf(['a=',num2str(a),'   b=',num2str(b),'   c=',num2str(c),'   omega=',num2str(omega),'\n']);
-%                 distance = -sum_distance(res,omega,name_list,name_max_R,a/norm([a,b,c]),b/norm([a,b,c]),c/norm([a,b,c]),name_max);
-%                 fig = [fig;[a/norm([a,b,c]),b/norm([a,b,c]),c/norm([a,b,c]),omega,distance]];
-%                 if distance> dist
-%                     dist = distance;
-%                     a_star = a/norm([a,b,c]);
-%                     b_star = b/norm([a,b,c]);
-%                     c_star = c/norm([a,b,c]);
-%                 end
-%             end
-%         end
-%     end
-% end
-load weights_star.mat
+for a=0.001:0.2:1
+    for b=0.001:0.2:1
+        for c=0.001:0.2:1
+            for omega=0:10:50
+                fprintf(['a=',num2str(a),'   b=',num2str(b),'   c=',num2str(c),'   omega=',num2str(omega),'\n']);
+                distance = -sum_distance(res,omega,name_list,name_max_R,a/norm([a,b,c]),b/norm([a,b,c]),c/norm([a,b,c]),name_max);
+                fig = [fig;[a/norm([a,b,c]),b/norm([a,b,c]),c/norm([a,b,c]),omega,distance]];
+                if distance> dist
+                    dist = distance;
+                    a_star = a/norm([a,b,c]);
+                    b_star = b/norm([a,b,c]);
+                    c_star = c/norm([a,b,c]);
+                end
+            end
+        end
+    end
+end
 
 figure(1);scatter3(fig(:,1),fig(:,2),fig(:,5),'.b');saveas(gcf,'color_area.png');
 figure(2);scatter3(fig(:,2),fig(:,3),fig(:,5),'.b');saveas(gcf,'area_length.png');
