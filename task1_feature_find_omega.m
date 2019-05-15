@@ -21,10 +21,8 @@ for image_num=1:4
     omegall=length(omegavv);
     ab_list = [];
     judge = 0;
-%     if image_num==1
         res = [];
         for omega1=1
-%         omega1=0;
             for omega4i=1:omegal
                 omega4i/omegal*100
                 for omega5i=1:omegall
@@ -74,29 +72,6 @@ for image_num=1:4
                 end
             end
         end
-%     else
-%         for omega1=max(0,omega_star(1)-0.2):0.05:min(1,omega_star(1)+0.2)
-%             for omega4=max(0,omega_star(4)-0.2):0.05:min(1,omega_star(4)+0.2)
-%                 for omega5=max(0,omega_star(4)-0.2):0.05:min(1,omega_star(4)+0.2)
-%                     omega = [omega1,omega1,omega1,omega4,omega5];
-%                     omegan=omega/norm(omega);
-%                     for i=1:num
-%                         for j=1:num
-%                             Adj(i,j) = calculate_dist(F(i,:),F(j,:),omegan);
-%                         end
-%                     end
-%                     Adj_sort = sort(Adj,2);
-%                     min_dist = Adj_sort(:,2);
-%                     min_dist = sort(min_dist);
-%                     dist = min_dist(round(num*0.1));
-%                     if dist>total_min
-%                         total_min = dist;
-%                         omega_star = omega;
-%                     end
-%                 end
-%             end
-%         end
-%     end
     figure;hold on;
     [~,dim] = size(res);
     for i=0:(dim/3-1)
