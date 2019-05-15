@@ -32,19 +32,6 @@ for color_num=1:3
                     point_inline = point_in_all_points(line_points_full);
                     num_group = (pixel_num-mod(pixel_num,5))/5;
                     color_group_hist1 = [0 0 0];
-            %         SHOW = A; %%
-            %         for a=1:1440  %%
-            %             for b=1:1920  %%
-            %                 for c=1:3  %%
-            %                     SHOW(a,b,c) = 2^8-1;  %%
-            %                 end  %%
-            %             end  %%
-            %         end  %%
-            %         for a=1:pixel_num  %%
-            %             for b=1:3  %%
-            %                 SHOW(point_inline(a,1),point_inline(a,2),b) = 0;  %%
-            %             end  %%
-            %         end  %%
                     for i=1:num_group:(num_group*5)
                         color_group = [0 0 0];
                         for j=1:area
@@ -61,19 +48,6 @@ for color_num=1:3
                                 end
                             end
                         end
-            %             imshow(SHOW); %%
-            %             for a=1:1440  %%
-            %                 for b=1:1920  %%
-            %                     for c=1:3  %%
-            %                         SHOW(a,b,c) = 2^8-1;  %%
-            %                     end  %%
-            %                 end  %%
-            %             end  %%
-            %             for a=1:pixel_num  %%
-            %                 for b=1:3  %%
-            %                     SHOW(point_inline(a,1),point_inline(a,2),b) = 0;  %%
-            %                 end  %%
-            %             end  %%
                         color_group = color_group(2:end,:);
                         color_group = mean(color_group);
                         color_group_hist1 = [color_group_hist1,color_group];
